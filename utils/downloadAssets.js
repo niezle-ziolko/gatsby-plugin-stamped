@@ -1,11 +1,16 @@
-"use strict"
+"use strict";
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
+
+const utils = require('./utils');
+const { cacheAssets } = require('./cacheAssets');
 
 
-async function downloadAssets(pluginOptions, reviewResults) {
-  const { assetsDir, downloadLocalImages } = pluginOptions;
+async function downloadAssets(gatsbyApi, pluginOptions, reviewResults) {
+  const {
+    assetsDir,
+    downloadLocalImages
+  } = pluginOptions;
 
   if (downloadLocalImages !== true || !assetsDir) {
     return;
@@ -16,23 +21,23 @@ async function downloadAssets(pluginOptions, reviewResults) {
     fs.mkdirSync(folderPath, { recursive: true });
   };
 
-  const downloadImage = async (imageUrl, filePath) => {
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image: ${imageUrl}`);
-    }
-    const buffer = await response.buffer();
-    fs.writeFileSync(filePath, buffer);
-  };
-
   for (const result of reviewResults) {
     if (result.review && result.review.productImageUrl) {
       const imageUrl = result.review.productImageUrl;
       const imageName = path.basename(new URL(imageUrl).pathname);
-      const filePath = path.join(folderPath, imageName);
+
+      const randomFolderName = utils.generateRandomString();
+      const randomFolderPath = path.join(folderPath, randomFolderName);
+
+      if (!fs.existsSync(randomFolderPath)) {
+        fs.mkdirSync(randomFolderPath, { recursive: true });
+      };
+
+      const filePath = path.join(randomFolderPath, imageName);
       try {
-        await downloadImage(imageUrl, filePath);
-        console.log(`Image downloaded and saved to: ${filePath}`);
+        await utils.downloadImage(imageUrl, filePath);
+        await cacheAssets(gatsbyApi, imageUrl);
+
       } catch (error) {
         console.error(`Error downloading image from ${imageUrl}:`, error);
       };

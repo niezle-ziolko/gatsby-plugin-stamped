@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 const graphql = require('gatsby-plugin-image/graphql-utils');
 const feature = require('gatsby-plugin-utils/has-feature');
 
@@ -22,6 +22,14 @@ async function schemaCustomization(gatsbyApi) {
       },
       placeholderUrl: {
         type: 'String',
+      },
+      localFile: {
+        type: 'File',
+        extensions: {
+          link: {
+            from: 'fields.localFile'
+          }
+        }
       }
     },
     interfaces: ['Node']

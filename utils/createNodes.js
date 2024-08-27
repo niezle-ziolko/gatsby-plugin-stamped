@@ -1,6 +1,7 @@
-"use strict"
+"use strict";
 const utils = require('./utils');
 const { downloadAssets } = require('./downloadAssets');
+const { cacheAssets } = require('./cacheAssets');
 
 
 async function createNodes(gatsbyApi, pluginOptions, reporter) {
@@ -28,7 +29,7 @@ async function createNodes(gatsbyApi, pluginOptions, reporter) {
 
   if (downloadLocalImages && assetsDir) {
     try {
-      await downloadAssets(pluginOptions, review.results);
+      await downloadAssets(gatsbyApi, pluginOptions, review.results);
     } catch (error) {
       reporter.error('Error downloading local images:', error);
       return;
@@ -40,25 +41,36 @@ async function createNodes(gatsbyApi, pluginOptions, reporter) {
   for (const result of review.results) {
     if (result.review.productImageUrl) {
       try {
-        const imageMetadata = await utils.getImageMetadata(result.review.productImageUrl);
+        const imageUrl = result.review.productImageUrl;
+        const localFileNode = await cacheAssets(gatsbyApi, imageUrl);
+        
+        if (!localFileNode) {
+          reporter.warn(`Failed to create local file node for image ${imageUrl}`);
+          continue;
+        }
+
+        const imageMetadata = await utils.getImageMetadata(imageUrl);
         const assetNodeId = createNodeId(`StampedAsset-${result.review.id}`);
 
         const assetNodeData = {
           id: assetNodeId,
           parent: null,
           children: [],
-          url: result.review.productImageUrl,
+          url: imageUrl,
           width: imageMetadata.width,
           height: imageMetadata.height,
           mimeType: imageMetadata.mimeType,
+          localFile: {
+            ...localFileNode
+          },
           internal: {
             type: 'StampedAsset',
             content: JSON.stringify({
-              url: result.review.productImageUrl,
+              url: imageUrl,
               ...imageMetadata
             }),
             contentDigest: createContentDigest({
-              url: result.review.productImageUrl,
+              url: imageUrl,
               ...imageMetadata
             })
           }
