@@ -25,5 +25,7 @@ exports.createSchemaCustomization = async (args, options) => {
 };
 
 exports.sourceNodes = async (args, options) => {
-  await createNodes(args, options);
+  const { reporter } = args;
+
+  await createNodes(args, options, reporter);
 };

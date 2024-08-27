@@ -1,26 +1,45 @@
 "use strict"
 const utils = require('./utils');
+const { downloadAssets } = require('./downloadAssets');
 
 
-async function createNodes(gatsbyApi, pluginOptions) {
+async function createNodes(gatsbyApi, pluginOptions, reporter) {
   const {
     actions,
-    reporter,
     createNodeId,
     createContentDigest
   } = gatsbyApi;
   const {
     createNode
   } = actions;
-  const { summaryReview } = pluginOptions;
+  const {
+    assetsDir,
+    summaryReview,
+    downloadLocalImages
+  } = pluginOptions;
 
   const review = utils._cache.reviewConfig;
   const summary = utils._cache.summaryConfig;
 
+  if (!review || !review.results) {
+    reporter.warn('No review data found in the stamped API response.');
+    return;
+  };
+
+  if (downloadLocalImages && assetsDir) {
+    try {
+      await downloadAssets(pluginOptions, review.results);
+    } catch (error) {
+      reporter.error('Error downloading local images:', error);
+      return;
+    };
+  };
+
   const stampedAssets = {};
-  if (review && review.results) {
-    for (const result of review.results) {
-      if (result.review.productImageUrl) {
+
+  for (const result of review.results) {
+    if (result.review.productImageUrl) {
+      try {
         const imageMetadata = await utils.getImageMetadata(result.review.productImageUrl);
         const assetNodeId = createNodeId(`StampedAsset-${result.review.id}`);
 
@@ -46,40 +65,34 @@ async function createNodes(gatsbyApi, pluginOptions) {
         };
 
         createNode(assetNodeData);
-        stampedAssets[result.review.id] = assetNodeData;
-      };  
+        stampedAssets[result.review.id] = assetNodeId;
+      } catch (error) {
+        reporter.error(`Error processing image for review ${result.review.id}:`, error);
+      };
+    };
+  };
+
+  for (const result of review.results) {
+    const nodeId = createNodeId(`StampedReview-${result.review.id}`);
+
+    const nodeData = {
+      ...result,
+      review: {
+        ...result.review,
+        productImageUrl: undefined,
+        productImageAsset___NODE: stampedAssets[result.review.id] || null
+      },
+      id: nodeId,
+      parent: null,
+      children: [],
+      internal: {
+        type: 'StampedReview',
+        content: JSON.stringify(result),
+        contentDigest: createContentDigest(result)
+      }
     };
 
-    for (const result of review.results) {
-      const nodeId = createNodeId(`StampedReview-${result.review.id}`);
-
-      let productImage = null;
-      if (result.review.productImageUrl) {
-        const assetNodeData = stampedAssets[result.review.id];
-        productImage = assetNodeData;
-        delete result.review.productImageUrl;
-      };
-
-      const nodeData = {
-        ...result,
-        review: {
-          ...result.review,
-          productImage
-        },
-        id: nodeId,
-        parent: null,
-        children: [],
-        internal: {
-          type: 'StampedReview',
-          content: JSON.stringify(result),
-          contentDigest: createContentDigest(result)
-        }
-      };
-
-      createNode(nodeData);
-    };
-  } else {
-    reporter.warn('No review data found in the stamped API response.');
+    createNode(nodeData);
   };
 
   if (summaryReview === true) {
