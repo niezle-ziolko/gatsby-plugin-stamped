@@ -1,6 +1,6 @@
 {
   "name": "gatsby-source-stamped-io",
-  "version": "1.0.6",
+  "version": "1.0.0",
   "description": "Unofficial plugin source from Hygraph (once GraphCMS)",
   "main": "gatsby-node.js",
   "private": false,

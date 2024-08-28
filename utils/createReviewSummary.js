@@ -45,6 +45,4 @@ async function createReviewSummary(reviewConfig, pluginOptions, reporter) {
   };
 };
 
-module.exports = {
-  createReviewSummary: createReviewSummary
-};
+module.exports = { createReviewSummary };

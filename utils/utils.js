@@ -45,8 +45,8 @@ function generateRandomString(length = 32) {
 };
 
 module.exports = {
-  _cache: _cache,
-  downloadImage: downloadImage,
-  getImageMetadata: getImageMetadata,
-  generateRandomString: generateRandomString
+  _cache,
+  downloadImage,
+  getImageMetadata,
+  generateRandomString
 };

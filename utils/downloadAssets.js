@@ -45,6 +45,4 @@ async function downloadAssets(gatsbyApi, pluginOptions, reviewResults) {
   };
 };
 
-module.exports = {
-  downloadAssets: downloadAssets
-};
+module.exports = { downloadAssets };

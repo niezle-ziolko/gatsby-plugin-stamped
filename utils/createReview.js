@@ -45,6 +45,4 @@ async function createReview(pluginOptions, reporter) {
   };
 };
 
-module.exports = {
-  createReview: createReview
-};
+module.exports = { createReview };

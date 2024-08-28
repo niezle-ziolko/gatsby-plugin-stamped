@@ -60,9 +60,7 @@ async function createNodes(gatsbyApi, pluginOptions, reporter) {
           width: imageMetadata.width,
           height: imageMetadata.height,
           mimeType: imageMetadata.mimeType,
-          localFile: {
-            ...localFileNode
-          },
+          localFile___NODE: localFileNode.id,
           internal: {
             type: 'StampedAsset',
             content: JSON.stringify({
@@ -131,6 +129,4 @@ async function createNodes(gatsbyApi, pluginOptions, reporter) {
   };
 };
 
-module.exports = {
-  createNodes: createNodes
-};
+module.exports = { createNodes };

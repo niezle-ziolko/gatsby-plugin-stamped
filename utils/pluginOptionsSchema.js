@@ -7,5 +7,5 @@ module.exports = {
   storeHash: Joi.string().required(),
   summaryReview: Joi.boolean().default(true),
   downloadLocalImages: Joi.boolean().default(false),
-  assetsDir: Joi.string().default('.assets')
+  assetsDir: Joi.string().default('.stamped')
 };

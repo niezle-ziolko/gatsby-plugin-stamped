@@ -100,6 +100,4 @@ async function resolveGatsbyImageData(image, options, _context, _info, { reporte
   return imageData;
 };
 
-module.exports = {
-  resolveGatsbyImageData: resolveGatsbyImageData
-};
+module.exports = { resolveGatsbyImageData };

@@ -22,14 +22,6 @@ async function schemaCustomization(gatsbyApi) {
       },
       placeholderUrl: {
         type: 'String',
-      },
-      localFile: {
-        type: 'File',
-        extensions: {
-          link: {
-            from: 'fields.localFile'
-          }
-        }
       }
     },
     interfaces: ['Node']
@@ -39,6 +31,4 @@ async function schemaCustomization(gatsbyApi) {
   createTypes(assetType);
 };
 
-module.exports = {
-  schemaCustomization: schemaCustomization
-};
+module.exports = { schemaCustomization };
