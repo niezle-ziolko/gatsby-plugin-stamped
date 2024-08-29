@@ -58,11 +58,9 @@ All reviews and the resources from which the reviews consist are available in th
 ```gql
 {
   allStampedReview {
-    edges {
-      node {
-        review {
-          id
-        }
+    nodes {
+      review {
+        id
       }
     }
   }
