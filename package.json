@@ -1,6 +1,6 @@
 {
   "name": "gatsby-plugin-stamped",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Unofficial plugin source from Stamped.io",
   "main": "gatsby-node.js",
   "private": false,
