@@ -1,10 +1,10 @@
 "use strict";
 const path = require('path');
 const promises = require('fs/promises');
+const pluginImage = require('gatsby-plugin-image');
+const pluginSharp = require('gatsby-plugin-sharp/plugin-options');
 const { getDominantColor } = require('gatsby-plugin-sharp');
 const { fetchRemoteFile } = require('gatsby-core-utils/fetch-remote-file');
-const { generateImageData, getLowResolutionImageURL } = require('gatsby-plugin-image');
-const { getPluginOptions, doMergeDefaults } = require('gatsby-plugin-sharp/plugin-options');
 
 
 function isImage(mimeType) {
@@ -33,7 +33,7 @@ async function resolveGatsbyImageData(image, options, _context, _info, { reporte
     format: format
   };
 
-  const sharpOptions = getPluginOptions();
+  const sharpOptions = pluginSharp.getPluginOptions();
   const userDefaults = sharpOptions.defaults;
   const defaults = {
     tracedSVGOptions: {},
@@ -48,7 +48,7 @@ async function resolveGatsbyImageData(image, options, _context, _info, { reporte
     ...userDefaults,
   };
   
-  options = doMergeDefaults(options, defaults);
+  options = pluginSharp.doMergeDefaults(options, defaults);
   
   if (options.placeholder && options.placeholder === 'tracedSVG') {
     if (!haveWarnedAboutPlaceholder) {
@@ -68,12 +68,12 @@ async function resolveGatsbyImageData(image, options, _context, _info, { reporte
     options
   };
 
-  const imageData = generateImageData(imageDataArgs);
+  const imageData = pluginImage.generateImageData(imageDataArgs);
   if (
     options.placeholder === 'blurred' ||
     options.placeholder == 'dominantColor'
   ) {
-    const lowResImageUrl = getLowResolutionImageURL(imageDataArgs, 20);
+    const lowResImageUrl = pluginImage.getLowResolutionImageURL(imageDataArgs, 20);
     
     const ext = path.extname(image.url) || '.jpg';
     
