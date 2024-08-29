@@ -15,7 +15,7 @@ jobs:
       - name: set up node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 'node'
+          node-version: '18.x'
 
       - run: npm ci
 
