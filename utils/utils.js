@@ -1,7 +1,7 @@
 "use strict";
 const fs = require('fs');
 const sharp = require('sharp');
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 
 const _cache = {};
