@@ -4,13 +4,13 @@
 ## Installation
 
 ```shell
-npm  install  gatsby-plugin-stamped
+npm install gatsby-plugin-stamped
 ```
 
 or
 
 ```shell
-yarn  add  gatsby-plugin-stamped
+yarn add gatsby-plugin-stamped
 ```
 
 ## Configuration
@@ -22,7 +22,7 @@ For the basic configuration of the plug-in, you need `publicKey`, `secretKey` an
 module.exports = {
   plugins: [
     {
-      resolve:  'gatsby-plugin-stamped',
+      resolve: 'gatsby-plugin-stamped',
       options: {
         publicKey: process.env.STAMPED_PUB,
         secretKey: process.env.STAMPED_SECRET,
@@ -88,7 +88,7 @@ If you don't need to use just add `summaryReview` to the plugin settings.
 module.exports = {
   plugins: [
     {
-      resolve:  'gatsby-plugin-stamped',
+      resolve: 'gatsby-plugin-stamped',
       options: {
         publicKey: process.env.STAMPED_PUB,
         secretKey: process.env.STAMPED_SECRET,
@@ -111,7 +111,7 @@ To enable this, add `downloadAssets: true` to your plugin configuration. This do
 module.exports = {
   plugins: [
     {
-      resolve:  'gatsby-plugin-stamped',
+      resolve: 'gatsby-plugin-stamped',
       options: {
         publicKey: process.env.STAMPED_PUB,
         secretKey: process.env.STAMPED_SECRET,
