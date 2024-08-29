@@ -9,7 +9,8 @@ const _cache = {};
 async function getImageMetadata(imageUrl) {
   try {
     const response = await fetch(imageUrl);
-    const buffer = await response.buffer();
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
     const metadata = await sharp(buffer).metadata();
     
     return {
@@ -29,7 +30,8 @@ async function downloadImage(imageUrl, filePath) {
     throw new Error(`Failed to fetch image: ${imageUrl}`);
   };
 
-  const buffer = await response.buffer();
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
   fs.writeFileSync(filePath, buffer);
 };
 
