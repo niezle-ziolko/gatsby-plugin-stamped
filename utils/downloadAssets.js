@@ -17,9 +17,12 @@ async function downloadAssets(gatsbyApi, pluginOptions, reviewResults) {
   };
 
   const folderPath = path.resolve(process.cwd(), assetsDir);
-  if (!fs.existsSync(folderPath)) {
-    fs.mkdirSync(folderPath, { recursive: true });
+
+  if (fs.existsSync(folderPath)) {
+    fs.rmSync(folderPath, { recursive: true, force: true });
   };
+
+  fs.mkdirSync(folderPath, { recursive: true });
 
   for (const result of reviewResults) {
     if (result.review && result.review.productImageUrl) {
